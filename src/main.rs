@@ -44,7 +44,6 @@ fn main() {
 
 fn caesar(plaintext: &String, key: u8, encode: bool) -> String {
     let mut return_bytearray = Vec::new();
-    println!("shift : {}", key % 65 % 26);
     for character in plaintext.as_bytes() {
         if *character > 65 && *character < 90 {
             if encode {
