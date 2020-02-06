@@ -1,8 +1,9 @@
 extern crate argparse;
 use argparse::{ArgumentParser, Store, StoreTrue};
+use std::str;
 
 fn main() {
-    let mut key: i8 = 0;
+    let mut key: u8 = 0;
     let mut text = String::new();
     let mut encode = false;
     let mut decode = false;
@@ -30,19 +31,31 @@ fn main() {
         parser.parse_args_or_exit();
     };
 
-    let mut end_text = String::new();
+    // let mut end_text = String::new();
 
     if encode {
-        println!("{}", encode_caesar(&(text.to_uppercase()), key));
+        println!("{}", caesar(&(text.to_uppercase()), key, true));
     } else if decode {
-        println!("{}", decode_caesar(&(text.to_uppercase()), key));
+        println!("{}", caesar(&(text.to_uppercase()), key, false));
     };
 }
 
-fn encode_caesar(plaintext: &String, key: i8) -> String {
-    plaintext.to_string()
-}
+fn caesar(plaintext: &String, key: u8, encode: bool) -> String {
+    let mut return_bytearray = Vec::new();
 
-fn decode_caesar(ciphertext: &String, key: i8) -> String {
-    ciphertext.to_string()
+    for character in plaintext.as_bytes() {
+        if *character > 65 && *character < 90 {
+            if encode {
+                return_bytearray.push((*character + key) % 65 % 26 + 65);
+            } else {
+                return_bytearray.push((*character + 26 - key) % 65 % 26 + 65);
+            };
+        } else {
+            return_bytearray.push(*character);
+        };
+    }
+    match str::from_utf8(&return_bytearray) {
+        Ok(v) => v.to_string(),
+        Err(e) => panic!("Something went wrong ! {}", e),
+    }
 }
