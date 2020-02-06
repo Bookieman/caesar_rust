@@ -1,3 +1,7 @@
+/*
+    This is an example implementation of a caesar cipher in Rust.
+*/
+
 extern crate argparse;
 use argparse::{ArgumentParser, Store, StoreTrue};
 use std::str;
@@ -31,8 +35,6 @@ fn main() {
         parser.parse_args_or_exit();
     };
 
-    // let mut end_text = String::new();
-
     if encode {
         println!("{}", caesar(&(text.to_uppercase()), key, true));
     } else if decode {
@@ -42,13 +44,13 @@ fn main() {
 
 fn caesar(plaintext: &String, key: u8, encode: bool) -> String {
     let mut return_bytearray = Vec::new();
-
+    println!("shift : {}", key % 65 % 26);
     for character in plaintext.as_bytes() {
         if *character > 65 && *character < 90 {
             if encode {
-                return_bytearray.push((*character + key) % 65 % 26 + 65);
+                return_bytearray.push(((*character % 65) + (key % 26)) % 26 + 65);
             } else {
-                return_bytearray.push((*character + 26 - key) % 65 % 26 + 65);
+                return_bytearray.push(((*character % 65) + 26 - (key % 26)) % 26 + 65);
             };
         } else {
             return_bytearray.push(*character);
